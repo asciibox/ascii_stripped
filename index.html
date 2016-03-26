@@ -51,9 +51,62 @@
     body {
         overflow:hidden; // Remove this if you want to see what is contained below the canvas
     }
+    #overlay
+    {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0%;
+        left: 0%;
+        background: rgba(0,0,0,0.8);
+        display:none;    }
+    #changeSizePopup
+    {
+        width:15%;
+        height: 10%;
+        min-width: 60px;
+        min-height: 110px;
+        background: #fff;
+        position: absolute;
+        margin: auto;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        border: 3px solid gray;
+    }
+    a#close
+    {
+        text-decoration: none;
+        color: #000;
+        font-weight: bold;
+        position: absolute;
+        top:5px;
+        right: 5px;
+    }
+    .inputgroup
+    {
+        color: #000;
+        margin-top: 20px;
+        margin-left: 5px;
+        width:80%;
+        font:bold 12px Arial;
+    }
+    .inputgroup input
+    {
+        margin-right: 1% !important;
+        width:30%;
+    }
     </style>
     <script>
-       var debug=false;
+	   function changeratio()
+      {
+        visibleWidth = document.getElementById("visibleWidth").value;
+        visibleHeight = document.getElementById("visibleHeight").value;
+        onloadfn();
+        document.getElementById("overlay").style.visibility = "hidden";
+      }
+      var debug=false;
 		/*
         var JAVASCRIPT_TEXT_DROP_HERE_TO_UPLOAD="Drop files here to upload";
         var JAVASCRIPT_TEXT_UPLOAD_A_FILE="Upload a file"; 
@@ -67,7 +120,7 @@
         var JAVASCRIPT_TEXT_ON_LEAVE="The files are being uploaded, if you leave now the upload will be cancelled.";*/
 
   
-   window.onload = function() {
+   window.onload = function () {
         
 		// Initialize the functionality to draw characters on the canvas, by using an image-map with the given filename (256 colors)
         codepage = new Codepage("assets/CO_437_8x16vga.png", function() { // codepagedisplay.js
@@ -90,13 +143,41 @@
             }); 
             
     }
+
+	function setSize() {
+			    document.getElementById('overlay').style.display='none';
+				visibleHeight = document.getElementById('visibleHeight').value;
+				visibleWidth = document.getElementById('visibleWidth').value;
+				if (visibleHeight>500) 
+				{
+					alert("The height limit is 500 characters");
+				} else if (visibleWidth>500)
+				{
+					alert("The width limit is 500 characters");
+				} else {
+				finishedRendering=false;
+				drawCharacters=new Array();
+				makeCanvasBlack();
+				resize_canvas();
+				}
+	}
         
    
     </script>
 </head>
 <body>
+	
     <div style="width: 640px" class="centered">
         <canvas id="ansi" width=640 height=8192></canvas> <!-- The size is certainly going to change. Where? Maybe in app.js through setANSICanvasSize() -->
     </div>
+	<div id="overlay">
+		<div id="changeSizePopup">
+		<a href="javascript:void(0)" onclick="document.getElementById('overlay').style.display='none';" id="close">X</a>
+	   <div class="inputgroup"><label>Width</label><input type="text" oninput="this.value = this.value.replace(/[^0-9]/g, ''); this.value = this.value.replace(/(\..*)\./g, '$1');" maxlength="3" id="visibleWidth">
+		</div>
+		<div class="inputgroup"><label>Height</label><input type="text"  id="visibleHeight" oninput="this.value = this.value.replace(/[^0-9]/g, ''); this.value = this.value.replace(/(\..*)\./g, '$1');" maxlength="3">
+		<input type="button" value="OK" onclick="setSize();">
+		</div>
+	</div>
 </body>
 </html>

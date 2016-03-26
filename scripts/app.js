@@ -2,7 +2,8 @@
 	    var drawCharacters = new Array(); // This is just an one-dimensional array containing a two-dimensional array with x and y coordinates for the screenCharacterArray
         var globalContext;
         /** When we are drawing by using mouse clicks, this is set to true **/
-  
+
+		var singleClick = false;
         var mouseDown =false;
         /** This is the general width and height, used globally to show the right coordinate system inside the canvas **/
         var width=320;
@@ -113,6 +114,15 @@
                 
                 ansicanvas.addEventListener('mousedown', function(e) {
                     
+						if (singleClick == false)
+						{
+							 singleClick=true;
+							 setTimeout(function() { singleClick = false; }, 300);
+						} else {
+							document.getElementById('overlay').style.display="inline";
+							document.getElementById('visibleWidth').focus();
+						}
+
                         var window_innerWidth = (visibleWidth*(canvasCharacterWidth));
                         var window_innerHeight = (visibleHeight*(canvasCharacterHeight));
 
