@@ -39,11 +39,27 @@ function Interpreter(url) {
                     onEscape    : escapesCursor.escape,
                     onLiteral   : modified_write2,
                     onComplete  : function() {
-						console.log("COMPLETE");
-						setCanvasSize(document.getElementById("ansi")); // This creates the canvas for us          
-						finishedRendering=true;						
-						updateScrollbarX(true,0); // draw the scrollbar at the bottom, x position = 0 
-						updateScrollbarY(true,0); // Show a part of the scrollbar again
+								console.log("COMPLETE");
+								setCanvasSize(document.getElementById("ansi")); // This creates the canvas for us  
+								makeCanvasBlack();
+								finishedRendering=true;						
+								if (renderedMaxY > visibleHeight)
+							    { 
+								   visibleHeight = visibleHeight;
+							    } else {
+								   visibleHeight = renderedMaxY;
+							   }
+							   if (renderedMaxX > visibleWidth)
+							   {
+								   visibleWidth = visibleWidth;
+							   } else {
+								   visibleWidth = renderedMaxX;
+							   }
+							   totalVisibleHeight=renderedMaxY;
+							   totalVisibleWidth=renderedMaxX;
+							   
+						/*updateScrollbarX(true,0); // draw the scrollbar at the bottom, x position = 0 
+						updateScrollbarY(true,0); // Show a part of the scrollbar again*/
 						}
                 	});
 
@@ -123,7 +139,7 @@ function modified_write2(text) {
 					//prevy = y;
 					// globalContext is = document.getElementById("ansi").getContext("2d");
 					codepage.drawChar(globalContext, charcode, foreground, background, x, y); // , transparent, storeCharacter, storeCharacterX) 
-					if (cursor.column === 80) {
+					if (cursor.column === totalVisibleWidth) {
                         cursor.column = 1;
                         cursor.row++;
                     } else {

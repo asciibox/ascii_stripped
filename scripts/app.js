@@ -36,18 +36,17 @@
       /** Ansi interpreter, display and charactersatonce **/
       var interpreter, display, charactersatonce;
          
-		 function doRedraw() {
-			 
+		 function doRedraw() {			 
+			
 				doClearScreen(false);
         		var lowerFrameStart = visibleWidth*canvasCharacterHeight; // redrawX + visibleXStart
-				
 				var sx = visibleXStart*canvasCharacterWidth; // The x coordinate of the upper left corner of the rectangle from which the ImageData will be extracted.
-				
-				var sy = (visibleHeight+visibleYStart+1)*canvasCharacterHeight; // The y coordinate of the upper left corner of the rectangle from which the ImageData will be extracted.
+				var sy = (visibleHeight+visibleYStart)*canvasCharacterHeight; // The y coordinate of the upper left corner of the rectangle from which the ImageData will be extracted.
 				var sw = (visibleWidth)*canvasCharacterWidth; // The width of the rectangle from which the ImageData will be extracted.
 				var sh = (visibleHeight-1)*canvasCharacterHeight; // The height of the rectangle from which the ImageData will be extracted. 
         		var imgData = ctx.getImageData(sx, sy, sw, sh);
         		ctx.putImageData(imgData, 0, 0);
+				
         		updateScrollbarX(true,0); // draw the scrollbar at the bottom, x position = 0 
 		   		updateScrollbarY(true,0); // Show a part of the scrollbar again
 		 }
@@ -72,7 +71,7 @@
           
         
     
-	/** This clears the screen by putting spaces with the current foreground and background color on the screen **/
+	/** This clears the screen, but only the area in which the region gets displayed, i.e. max. to visibleWidth and visibleHeight (i.e. 45 characters times 90 characters) **/
     function doClearScreen() {
            var bgstring = "#000000";
 		   ctx = document.getElementById("ansi").getContext("2d");
@@ -178,7 +177,7 @@
 		   // Now set the new canvas dimensions
 console.log("RESIZE SIZE");
 		   setCanvasSize(document.getElementById("ansi")); // This creates the canvas for us
-makeCanvasBlack();
+makeCanvasBlack(); // codepagedisplay.js
 		   // Then draw all characters again
 		   console.log("RESIZE CHARS");
            

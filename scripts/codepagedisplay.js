@@ -75,29 +75,27 @@ function Codepage(codepageUrl, callback) {
                          
                          charArray[0]=asciiCode;
                          charArray[1]=foreground;
-                         charArray[2]=background;
-						 
+                         charArray[2]=background;						 
                         
 							// This are checks, otherwise the browser hangs. If it's more efficient to do a try catch then that's okay too.
                             if (typeof(screenCharacterArray[realY])=="undefined") {
                                 screenCharacterArray[realY]=new Array();
                                
-                                totalVisibleHeight=realY;
                                 height=realY;
                                 screenCharacterArray[realY][realX]=charArray;
                                 drawCharacters.push(new Array(realX, realY));
                                 //console.log("Array "+realY);
                                 
-                                if (renderedMaxX<realX) renderedMaxX=realX;
- 							    if (renderedMaxY<realY) renderedMaxY=realY;
+                                if (renderedMaxX<realX) renderedMaxX=realX+1;
+ 							    if (renderedMaxY<realY) renderedMaxY=realY+1;
                             } else
 							// only if storeCharacter is set and storeCharacter==true
                             if ( (typeof(storeCharacter)=="undefined") || (storeCharacter==true) ) {
                                 screenCharacterArray[realY][realX]=charArray; // Store the triple array inside the variable screenCharacterArray
                                 //console.log("Array 2 "+realY+" "+realX);
 									drawCharacters.push(new Array(realX, realY));
-									if (renderedMaxX<realX) renderedMaxX=realX;
- 							    	if (renderedMaxY<realY) renderedMaxY=realY;
+									if (renderedMaxX<realX) renderedMaxX=realX+1;
+ 							    	if (renderedMaxY<realY) renderedMaxY=realY+1;
                             } 
                         }
                        

@@ -30,6 +30,8 @@
 	<script>
 		var visibleWidth = 80; // Number of characters visible on the screen
         var visibleHeight = 45; // Number of characters visible on the screen
+		var defaultVisibleWidth = visibleWidth;
+		var defaultVisibleHeight = visibleHeight;
         var totalVisibleWidth = 160; // Number of characters also those outside of the screen
         var totalVisibleHeight=90; // Number of characters also those outside of the screen
 		var defaultTotalVisibleWidth = totalVisibleWidth;
@@ -58,7 +60,7 @@
    
     <style type="text/css" media="screen">
     body {
-        overflow:hidden; // Remove this if you want to see what is contained below the canvas
+       overflow:hidden; // Remove this if you want to see what is contained below the canvas
     }
     #overlay
     {
@@ -108,15 +110,6 @@
     }
     </style>
     <script>
-	   function changeratio()
-      {
-        visibleWidth = document.getElementById("visibleWidth").value;
-        visibleHeight = document.getElementById("visibleHeight").value;
-        totalVisibleWidth = document.getElementById("totalVisibleWidth").value;
-        totalVisibleHeight = document.getElementById("totalVisibleHeight").value;
-        onloadfn();
-        document.getElementById("overlay").style.visibility = "hidden";
-      }
       var debug=false;
 		/*
         var JAVASCRIPT_TEXT_DROP_HERE_TO_UPLOAD="Drop files here to upload";
@@ -190,7 +183,7 @@
 							document.getElementById('visibleWidth').value=defaultVisibleWidth;
 							document.getElementById('visibleHeight').value=defaultVisibleHeight;
 							document.getElementById('totalVisibleWidth').value=defaultTotalVisibleWidth;
-							document.getElementById('totalVisibleHeight').value=defaultToptalVisibleHeight;
+							document.getElementById('totalVisibleHeight').value=defaultTotalVisibleHeight;
 	}
     </script>
 </head>

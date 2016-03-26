@@ -113,7 +113,7 @@ function render() {
 						    	// Then the character from the image gets copied to the canvas
                             	//alert("1:myx="+myx+" myy="+myy+" x="+x+" y="+y+"CW1:"+characterHeight+" canvasCharacterHeight:"+canvasCharacterHeight);
 								
-                            	ctx.drawImage(codepageImg, myx, myy, characterWidth, characterHeight, x, y, canvasCharacterWidth, canvasCharacterHeight);
+                            	//ctx.drawImage(codepageImg, myx, myy, characterWidth, characterHeight, x, y, canvasCharacterWidth, canvasCharacterHeight);
                             	ctx.drawImage(codepageImg, myx, myy, characterWidth, characterHeight, x, y+(visibleHeight*canvasCharacterHeight), canvasCharacterWidth, canvasCharacterHeight);
                             } else {
                             	ctx.drawImage(codepageImg, myx, myy, characterWidth, characterHeight, x, y+(visibleHeight*canvasCharacterHeight), canvasCharacterWidth, canvasCharacterHeight);
@@ -131,7 +131,7 @@ function render() {
                           var myy = Math.floor(asciiCode / 32) * characterHeight + (ypos*128);
                           
                           // standard drawing
-                          ctx.drawImage(codepageImg, myx, myy, characterWidth, characterHeight, x, y, canvasCharacterWidth, canvasCharacterHeight);
+                          //ctx.drawImage(codepageImg, myx, myy, characterWidth, characterHeight, x, y, canvasCharacterWidth, canvasCharacterHeight);
                           
                           // now add visibleHeight to it, to draw it below the main image again
                           y+=(visibleHeight*canvasCharacterHeight);
@@ -149,6 +149,10 @@ function render() {
                         }
 
 						drawCharacters.shift();
+						if (drawCharacters.length==0)
+						{
+							doRedraw(); // Draw upper screen within the scrollbar
+						}
 
 	}
 }
