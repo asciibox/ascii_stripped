@@ -56,8 +56,8 @@ var scrollPosX = 0;
 	    {
 			firstLine++;
 			visibleYStart++;
-			doRedraw();
-			updateScrollbarY(true,0); // Show a part of the scrollbar again
+			doRedraw(); // app.js
+			updateScrollbarY(true,0); // Show a part of the scrollbar again, scrollbar.js
         }
     }
 
@@ -66,8 +66,8 @@ var scrollPosX = 0;
 		{
 			firstLine--;
 			visibleYStart--;
-			doRedraw();
-			updateScrollbarY(true,0); // Show a part of the scrollbar again
+			doRedraw(); // app.js
+			updateScrollbarY(true,0); // Show a part of the scrollbar again, scrollbar.js
 		}
     }
 
@@ -76,8 +76,8 @@ var scrollPosX = 0;
 		{
 			leftLine--;
 			visibleXStart--;
-			doRedraw();
-			updateScrollbarX(true,0); // Show a part of the scrollbar again
+			doRedraw(); // app.js
+			updateScrollbarX(true,0); // Show a part of the scrollbar again, scrollbar.js
         }
     }
 
@@ -86,23 +86,22 @@ var scrollPosX = 0;
 	    {
 			leftLine++;
 			visibleXStart++;
-			doRedraw();
-			updateScrollbarX(true,0); // Show a part of the scrollbar again
+			doRedraw(); // app.js
+			updateScrollbarX(true,0); // Show a part of the scrollbar again, scrollbar.js
 		}
 	}
   
   /** This redraws the vertial scrollbar **/
   function updateScrollbarY(drawTopBlackside, offsetY) {
-       
+      
        if (typeof(offsetY)=="undefined") offsetY=0;
        
-       var myScrollPosX = document.getElementById('ansi').width-parseInt(canvasCharacterWidth)-4;
-       
+       var myScrollPosX = (visibleWidth*canvasCharacterWidth)-parseInt(canvasCharacterWidth)-5;
        
        var window_innerHeight = (visibleHeight*(canvasCharacterHeight));
        var scrollBarHeight = (visibleHeight/totalVisibleHeight)*window_innerHeight;
     
-        myScrollPosY = (firstLine / totalVisibleHeight)*window_innerHeight;
+        myScrollPosY = (firstLine / totalVisibleHeight)*window_innerHeight-1;
         console.log("myScrollPosY:"+myScrollPosY);
        if (myScrollPosY+offsetY<0) {
            myScrollPosY = -offsetY; 
@@ -153,9 +152,7 @@ var scrollPosX = 0;
        
        var window_innerWidth = ((visibleWidth)*(canvasCharacterWidth));
        
-       var myScrollPosX = (leftLine / totalVisibleWidth)*window_innerWidth;
-       
-       
+       var myScrollPosX = (leftLine / (totalVisibleWidth-1))*window_innerWidth;
        
        var scrollBarWidth = (visibleWidth/totalVisibleWidth)*window_innerWidth;
        if (myScrollPosX+offsetX+scrollBarWidth>window_innerWidth) {

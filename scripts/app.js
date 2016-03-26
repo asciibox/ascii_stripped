@@ -19,10 +19,7 @@
         var scrollBarYShown = 1;
         
 		// You can modify this. It gets set in the call to app.js->setCanvasSize(), and called from index.html in the callback of Codepage initialization. If you change this, the canvasCharacter-Height and -width changes.
-        var visibleWidth = 160; // Number of characters visible on the screen
-        var visibleHeight = 45; // Number of characters visible on the screen
-        var totalVisibleWidth = 320; // Number of characters also those outside of the screen
-        var totalVisibleHeight=90; // Number of characters also those outside of the screen
+      
         var firstLine=0; // Top Y Position according to scrollbar
         var leftLine=0; // Very left X Position according to scrollbar
         
@@ -40,14 +37,19 @@
       var interpreter, display, charactersatonce;
          
 		 function doRedraw() {
+			 
 				doClearScreen(false);
         		var lowerFrameStart = visibleWidth*canvasCharacterHeight; // redrawX + visibleXStart
-				// visibleWidth-1 due to scrollbar on the right side, visibleHeight-2 due to scrollbar on the lower side
-        		var imgData = ctx.getImageData(visibleXStart*canvasCharacterWidth, (visibleHeight+visibleYStart+1)*canvasCharacterHeight, (renderedMaxX-5)*canvasCharacterWidth, (visibleHeight-1)*canvasCharacterHeight);
+				
+				var sx = visibleXStart*canvasCharacterWidth; // The x coordinate of the upper left corner of the rectangle from which the ImageData will be extracted.
+				
+				var sy = (visibleHeight+visibleYStart+1)*canvasCharacterHeight; // The y coordinate of the upper left corner of the rectangle from which the ImageData will be extracted.
+				var sw = (visibleWidth)*canvasCharacterWidth; // The width of the rectangle from which the ImageData will be extracted.
+				var sh = (visibleHeight-1)*canvasCharacterHeight; // The height of the rectangle from which the ImageData will be extracted. 
+        		var imgData = ctx.getImageData(sx, sy, sw, sh);
         		ctx.putImageData(imgData, 0, 0);
         		updateScrollbarX(true,0); // draw the scrollbar at the bottom, x position = 0 
 		   		updateScrollbarY(true,0); // Show a part of the scrollbar again
-
 		 }
       
 	  // This gets called whenever the scrollbar position changes from scrollbar.js, from inside the even listeners
@@ -108,102 +110,6 @@
         };
     }
         
-        function registerEventListeners() {
-             
-                ansicanvas = document.getElementById('ansi');
-                
-                ansicanvas.addEventListener('mousedown', function(e) {
-                    
-						if (singleClick == false)
-						{
-							 singleClick=true;
-							 setTimeout(function() { singleClick = false; }, 300);
-						} else {
-							document.getElementById('overlay').style.display="inline";
-							document.getElementById('visibleWidth').focus();
-						}
-
-                        var window_innerWidth = (visibleWidth*(canvasCharacterWidth));
-                        var window_innerHeight = (visibleHeight*(canvasCharacterHeight));
-
-                        var mouse = getMousePos(ansicanvas, e);
-                        var my = mouse.y;                
-                        var mx = mouse.x;
-
-                        var myScrollbarY = window_innerHeight-canvasCharacterHeight;
-
-                        if (my>(myScrollbarY)) {
-                            movingXStartPos = mx;
-                            console.log("Setting movingX to true");
-                            movingX=true;
-                            movingY=false;
-                        }
-
-                        var myScrollbarX = ansicanvas.width-canvasCharacterWidth;
-
-                        if (mx>myScrollbarX) {
-                            movingYStartPos = my;
-                            console.log("Setting movingY to true");
-                            movingY=true;
-                            movingX=false;
-                        }
-                    
-                    mouseDown=true;
-                    mouseMove(ansicanvas, e);
-                    
-                }, true);
-                
-                
-              
-                
-                ansicanvas.addEventListener('mouseleave', function(e) {
-                    mouseDown=false;
-                });
-                
-                ansicanvas.addEventListener('mouseup', function(e) {
-                   mouseDown=false;
-                   if ( (movingX) || (movingY) ) {
-                   firstLine=animOffsetY; 
-                   leftLine=animOffsetX;
-                   movingX=false;
-                   movingY=false;
-                   }
-                });
-            
-                ansicanvas.addEventListener('mousemove', function(e) {
-                  
-                   if (movingY==true)
-                   {
-                       var mouse = getMousePos(ansicanvas, e);
-                       var mx = mouse.x;
-                       var my = mouse.y;
-                       scrollPosY=my;
-          
-            
-                       redrawScreenMouseUpdate();
-                   
-                   } else
-                   if (movingX==true) 
-                   {
-                       var mouse = getMousePos(ansicanvas, e);
-                       var mx = mouse.x;
-                       var my = mouse.y;
-                       scrollPosX=mx;
-                       redrawScreenMouseUpdate();
-                   
-                   } else
-                   
-                   if (mouseDown==true) {
-                    
-                   mouseMove(ansicanvas,e);
-                    
-                 
-                   }
-                   
-                });
-
-               
-        }
         
         /** This gets called whenever the mouse moves and the left mouse button is getting keeped pressed  **/
         
@@ -290,6 +196,8 @@ makeCanvasBlack();
            }
 		   finishedRendering=true;
 		   console.log("NOW IT SHOULD REDRAW");
+		   updateScrollbarX(true,0); // draw the scrollbar at the bottom, x position = 0 
+		   		updateScrollbarY(true,0); // Show a part of the scrollbar again
         }
         
 	   /* This sets the correct variables from the values visibleWidth, visibleHeight and totalVisibleWidth and totalVisibleHeight **/
@@ -308,7 +216,8 @@ makeCanvasBlack();
                 canvasCharacterWidth=Math.floor(8*characterWidthPct);
                 canvasCharacterHeight=Math.floor(16*characterHeightPct);
                 canvas.width=renderedMaxX*(canvasCharacterWidth+1); //fullCanvasWidth;
-                canvas.height=renderedMaxY*canvasCharacterHeight; // fullCanvasHeight; - set it to required size after rendering TODO
+                canvas.height=(visibleHeight+renderedMaxY)*canvasCharacterHeight; // fullCanvasHeight; - set it to required size after rendering TODO
+			
         
             } else {
             
@@ -316,41 +225,12 @@ makeCanvasBlack();
                 fullCanvasHeight=window_innerHeight; // Math.floor(width*8*characterHeightPct);
 
                 canvas.width=renderedMaxX*(canvasCharacterWidth+1);
-                canvas.height=renderedMaxY*canvasCharacterHeight;; // fullCanvasHeight - we will set it after rendering to the required size TODO
+                canvas.height=(visibleHeight+renderedMaxY)*canvasCharacterHeight;; // fullCanvasHeight - we will set it after rendering to the required size TODO
 
                 canvasCharacterWidth=Math.floor(window_innerWidth/visibleWidth); // Math.floor(8*characterWidthPct);
                 canvasCharacterHeight=Math.floor(window_innerHeight / visibleHeight); // Math.floor(16*characterHeightPct);
-           
-            
+                      
             }
-           
             
         }
 
-function registerKeyEventListeners() {
-
-				document.body.addEventListener('keydown',
-                function(e)
-                {
-                 
-                    var keyCode = e.which;
-                  
-					if (keyCode == 40) {
-                        scrollDown();
-						e.preventDefault();
-                    } else
-                    if (keyCode==38) {
-                         scrollUp();
-						 e.preventDefault();
-                    } else
-                    if (keyCode==39) { 
-                        scrollRight();
-                    } else if (keyCode==37) {
-                        scrollLeft();
-						e.preventDefault();
-                    }
-                    
-                
-                },
-                false);
-}
