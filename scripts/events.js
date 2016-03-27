@@ -68,7 +68,7 @@
                   
                    if (movingY==true)
                    {
-					   console.log("movingY");
+					   //console.log("movingY");
                        var mouse = getMousePos(ansicanvas, e);
                        var mx = mouse.x;
                        var my = mouse.y;
@@ -78,7 +78,7 @@
                    } else
                    if (movingX==true) 
                    {
-					   console.log("movingX");
+					   //console.log("movingX");
                        var mouse = getMousePos(ansicanvas, e);
                        var mx = mouse.x;
                        var my = mouse.y;
@@ -122,7 +122,7 @@
                         scrollLeft();
 						e.preventDefault();
                     }
-                    e.preventDefault();
+                    
                 
                 },
                 false);

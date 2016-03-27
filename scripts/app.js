@@ -118,7 +118,7 @@
         /** This gets called whenever the mouse moves and the left mouse button is getting keeped pressed  **/
         
         function mouseMove(ansicanvas, e) {
-            console.log(e);
+            //console.log(e);
             
             var mouse = getMousePos(ansicanvas, e);
                     var mx = mouse.x;
