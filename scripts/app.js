@@ -41,9 +41,10 @@
 				doClearScreen(false);
         		var lowerFrameStart = visibleWidth*canvasCharacterHeight; // redrawX + visibleXStart
 				var sx = visibleXStart*canvasCharacterWidth; // The x coordinate of the upper left corner of the rectangle from which the ImageData will be extracted.
-				var sy = (visibleHeight+visibleYStart)*canvasCharacterHeight; // The y coordinate of the upper left corner of the rectangle from which the ImageData will be extracted.
+				var sy = (visibleHeight+visibleYStart+1)*canvasCharacterHeight; // The y coordinate of the upper left corner of the rectangle from which the ImageData will be extracted.
 				var sw = (visibleWidth)*canvasCharacterWidth; // The width of the rectangle from which the ImageData will be extracted.
 				var sh = (visibleHeight-1)*canvasCharacterHeight; // The height of the rectangle from which the ImageData will be extracted. 
+				//console.log("sx: "+sx+" sy: "+sy+" sw: "+sw+" sh: "+sh);
         		var imgData = ctx.getImageData(sx, sy, sw, sh);
         		ctx.putImageData(imgData, 0, 0);
 				
@@ -56,9 +57,12 @@
              var window_innerWidth = (visibleWidth*(canvasCharacterWidth));
              var window_innerHeight = (visibleHeight*(canvasCharacterHeight));
             
-             visibleXStart = Math.floor((scrollPosX/window_innerWidth)*width);
+             visibleXStart = Math.floor((scrollPosX/window_innerWidth)*visibleWidth);
              visibleXStop = visibleXStart + visibleWidth;
-             
+			 console.log("visibleXStart: "+visibleXStart+" visibleXStop : "+visibleXStop+ "innerWidth: "+window_innerWidth);
+			 
+			 console.log("Add an if here!!!");
+			 //console.log("scrollPosY: "+scrollPosY+" window_innerHeight: "+window_innerHeight+" height: "+height);
              visibleYStart = Math.floor((scrollPosY/window_innerHeight)*height);
              var visibleYStop = visibleYStart + visibleHeight;
              animOffsetX=visibleXStart;
@@ -67,6 +71,7 @@
              leftLine =visibleXStart;
              
              doRedraw();
+			 
         }
           
         
@@ -202,15 +207,23 @@ makeCanvasBlack(); // codepagedisplay.js
 	   /* This sets the correct variables from the values visibleWidth, visibleHeight and totalVisibleWidth and totalVisibleHeight **/
        function setCanvasSize(canvas) {
             
+			// If set to 0 use just modified variables like visibleWidth and visibleHeight to calculate the font size
+			if ( (defaultTotalVisibleWidth==0) || (defaultTotalVisibleHeight==0) )
+			{
+				defaultTotalVisibleWidth=visibleWidth;
+				defaultTotalVisibleHeight=visibleHeight;
+			}
             var window_innerWidth = window.innerWidth;
             var window_innerHeight = window.innerHeight;
-            var characterWidthPct= window_innerWidth/(visibleWidth*8); // How often does the character fit into the width
-            var characterHeightPct = window_innerHeight/(visibleHeight*16);  // How often does the character fit into the height
+			// defaultTotalVisibleWidth and defaultTotalVisibleHeight get used to calculate the font size. These variables do not get changed anywhere and can only get set in index.html, nowhere else.
+			// Or by setting them to 0, then the 2 variables get assigned by the variables visibleWidth and visibleHeight above
+            var characterWidthPct= window_innerWidth/(defaultTotalVisibleWidth*8); // How often does the character fit into the width
+            var characterHeightPct = window_innerHeight/(defaultTotalVisibleHeight*16);  // How often does the character fit into the height
             
             if (resizeToScreen==false) {
             
-                fullCanvasWidth=Math.floor(visibleWidth*8*characterWidthPct);
-                fullCanvasHeight=Math.floor(visibleWidth*8*characterHeightPct);
+                fullCanvasWidth=Math.floor(defaultTotalVisibleWidth*8*characterWidthPct);
+                fullCanvasHeight=Math.floor(defaultTotalVisibleWidth*8*characterHeightPct);
 
                 canvasCharacterWidth=Math.floor(8*characterWidthPct);
                 canvasCharacterHeight=Math.floor(16*characterHeightPct);

@@ -32,8 +32,10 @@
         var visibleHeight = 45; // Number of characters visible on the screen
 		var defaultVisibleWidth = visibleWidth;
 		var defaultVisibleHeight = visibleHeight;
-        var totalVisibleWidth = 160; // Number of characters also those outside of the screen
-        var totalVisibleHeight=90; // Number of characters also those outside of the screen
+//        var totalVisibleWidth = 160; // This should be used to calculate canvasCharacterWidth accordingly
+//        var totalVisibleHeight=90; // This should calculate canvasCharacterHeight accordingly
+		var totalVisibleWidth = 0; // Set this to 0 to dynamically calculate the character size according to the format of the loaded .ANS file
+        var totalVisibleHeight=0;  // Set this to 0 to dynamically calculate the character size according to the format of the loaded .ANS file		
 		var defaultTotalVisibleWidth = totalVisibleWidth;
 		var defaultTotalVisibleHeight = totalVisibleHeight;
 	</script>
@@ -73,10 +75,10 @@
         display:none;    }
     #changeSizePopup
     {
-        width:25%;
-        height: 20%;
+        width:30%;
+        height: 25%;
         min-width: 60px;
-        min-height: 200px;
+        min-height: 260px;
         background: #fff;
         position: absolute;
         margin: auto;
@@ -125,7 +127,9 @@
 
   
    window.onload = function () {
-      
+		if ( ( defaultTotalVisibleWidth==0) || ( defaultTotalVisibleHeight ==0) ) {
+			document.getElementById('setdyamicfontsize').checked=true;
+		}
 		// Initialize the functionality to draw characters on the canvas, by using an image-map with the given filename (256 colors)
         codepage = new Codepage("assets/CO_437_8x16vga.png", function() { // codepagedisplay.js
             
@@ -185,6 +189,10 @@
 							document.getElementById('totalVisibleWidth').value=defaultTotalVisibleWidth;
 							document.getElementById('totalVisibleHeight').value=defaultTotalVisibleHeight;
 	}
+
+	function hideOverlay() {
+		document.getElementById('overlay').style.display='none';
+	}
     </script>
 </head>
 <body>
@@ -194,14 +202,17 @@
     </div>
 	<div id="overlay">
 		<div id="changeSizePopup">
-		<a href="javascript:void(0)" onclick="document.getElementById('overlay').style.display='none';" id="close">X</a>
-	   <div class="inputgroup"><label>Visible width: </label><input type="text" oninput="this.value = this.value.replace(/[^0-9]/g, ''); this.value = this.value.replace(/(\..*)\./g, '$1');" maxlength="3" id="visibleWidth">
+		<a href="javascript:void(0)" onclick="hideOverlay();" id="close">X</a>
+	   <div class="inputgroup"><label>Visible width: </label><input type="text" oninput="//this.value = this.value.replace(/[^0-9]/g, ''); this.value = this.value.replace(/(\..*)\./g, '$1');" maxlength="3" id="visibleWidth">
 		</div>
-		<div class="inputgroup"><label>Visible height: </label><input type="text"  id="visibleHeight" oninput="this.value = this.value.replace(/[^0-9]/g, ''); this.value = this.value.replace(/(\..*)\./g, '$1');" maxlength="3">
+		<div class="inputgroup"><label>Visible height: </label><input type="text"  id="visibleHeight" oninput="//this.value = this.value.replace(/[^0-9]/g, ''); this.value = this.value.replace(/(\..*)\./g, '$1');" maxlength="3">
 		</div>
-		<div class="inputgroup"><label>Total width: </label><input type="text"  id="totalVisibleWidth" oninput="this.value = this.value.replace(/[^0-9]/g, ''); this.value = this.value.replace(/(\..*)\./g, '$1');" maxlength="3">
+		<div class="inputgroup"><label>Total width: </label><input type="text"  id="totalVisibleWidth" oninput="//this.value = this.value.replace(/[^0-9]/g, ''); this.value = this.value.replace(/(\..*)\./g, '$1');" maxlength="3">
 		</div>
-		<div class="inputgroup"><label>Total height: </label><input type="text"  id="totalVisibleHeight" oninput="this.value = this.value.replace(/[^0-9]/g, ''); this.value = this.value.replace(/(\..*)\./g, '$1');" maxlength="3">
+		<div class="inputgroup"><label>Total height: </label><input type="text"  id="totalVisibleHeight" oninput="//this.value = this.value.replace(/[^0-9]/g, ''); this.value = this.value.replace(/(\..*)\./g, '$1');" maxlength="3" disabled="disabled">
+		</div>
+		<div class="inputgroup"><label>Set font size dynamically according to file format</label><input type="checkbox"  id="setdyamicfontsize" onchange="if (this.checked) {
+			document.getElementById('totalVisibleWidth').value=0;document.getElementById('totalVisibleHeight').value=0; }">
 		</div>
 		<input type="button" value="OK" onclick="setSize();">
 	</div>

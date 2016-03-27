@@ -43,23 +43,21 @@ function Interpreter(url) {
 								setCanvasSize(document.getElementById("ansi")); // This creates the canvas for us  
 								makeCanvasBlack();
 								finishedRendering=true;						
-								if (renderedMaxY > visibleHeight)
+								if (renderedMaxY > defaultVisibleHeight)
 							    { 
-								   visibleHeight = visibleHeight;
+								   visibleHeight = defaultVisibleHeight;
 							    } else {
 								   visibleHeight = renderedMaxY;
 							   }
-							   if (renderedMaxX > visibleWidth)
+							   if (renderedMaxX > defaultVisibleWidth)
 							   {
-								   visibleWidth = visibleWidth;
+								   visibleWidth = defaultVisibleWidth;
 							   } else {
 								   visibleWidth = renderedMaxX;
 							   }
 							   totalVisibleHeight=renderedMaxY;
 							   totalVisibleWidth=renderedMaxX;
-							   
-						/*updateScrollbarX(true,0); // draw the scrollbar at the bottom, x position = 0 
-						updateScrollbarY(true,0); // Show a part of the scrollbar again*/
+							  // alert("renderedMaxY: "+renderedMaxX+" screenCharacter.length: "+screenCharacterArray.length);
 						}
                 	});
 
@@ -139,7 +137,7 @@ function modified_write2(text) {
 					//prevy = y;
 					// globalContext is = document.getElementById("ansi").getContext("2d");
 					codepage.drawChar(globalContext, charcode, foreground, background, x, y); // , transparent, storeCharacter, storeCharacterX) 
-					if (cursor.column === totalVisibleWidth) {
+					if (cursor.column === visibleWidth) { // visibleWidth used here, otherwise translation errors. This seems to be that way because normal screens normally stopped at 80. Format check would be an option.
                         cursor.column = 1;
                         cursor.row++;
                     } else {

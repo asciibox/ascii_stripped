@@ -80,6 +80,7 @@ function Codepage(codepageUrl, callback) {
 							// This are checks, otherwise the browser hangs. If it's more efficient to do a try catch then that's okay too.
                             if (typeof(screenCharacterArray[realY])=="undefined") {
                                 screenCharacterArray[realY]=new Array();
+								//console.log("realY: "+realY);
                                
                                 height=realY;
                                 screenCharacterArray[realY][realX]=charArray;
@@ -92,7 +93,7 @@ function Codepage(codepageUrl, callback) {
 							// only if storeCharacter is set and storeCharacter==true
                             if ( (typeof(storeCharacter)=="undefined") || (storeCharacter==true) ) {
                                 screenCharacterArray[realY][realX]=charArray; // Store the triple array inside the variable screenCharacterArray
-                                //console.log("Array 2 "+realY+" "+realX);
+                                    //console.log("realY2: "+realY);
 									drawCharacters.push(new Array(realX, realY));
 									if (renderedMaxX<realX) renderedMaxX=realX+1;
  							    	if (renderedMaxY<realY) renderedMaxY=realY+1;

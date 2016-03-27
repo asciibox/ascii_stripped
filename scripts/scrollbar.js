@@ -101,6 +101,7 @@ var scrollPosX = 0;
        var window_innerHeight = (visibleHeight*(canvasCharacterHeight));
        var scrollBarHeight = (visibleHeight/totalVisibleHeight)*window_innerHeight;
     
+	console.log("firstLine:"+firstLine+" totalVisibleHeight:"+totalVisibleHeight+" visibleHeight: "+visibleHeight+" window_innerHeight:"+window_innerHeight);
         myScrollPosY = (firstLine / totalVisibleHeight)*window_innerHeight-1;
         console.log("myScrollPosY:"+myScrollPosY);
        if (myScrollPosY+offsetY<0) {
@@ -141,7 +142,7 @@ var scrollPosX = 0;
             context.strokeStyle = 'black';
             context.stroke();
        }
-       scrollPosY = myScrollPosY+offsetY;
+       //scrollPosY = myScrollPosY+offsetY;
        
    }
    
@@ -155,6 +156,7 @@ var scrollPosX = 0;
        var myScrollPosX = (leftLine / (totalVisibleWidth-1))*window_innerWidth;
        
        var scrollBarWidth = (visibleWidth/totalVisibleWidth)*window_innerWidth;
+	   console.log("visibleWidth:"+visibleWidth+" totalVisibleWidth: "+totalVisibleWidth+" window_innerWidth: "+window_innerWidth);
        if (myScrollPosX+offsetX+scrollBarWidth>window_innerWidth) {
            myScrollPosX=window_innerWidth-offsetX-scrollBarWidth;
        } else
@@ -196,6 +198,6 @@ var scrollPosX = 0;
        context.strokeStyle = 'black';
        context.stroke();
        }
-       scrollPosX = myScrollPosX + offsetX;
+      // scrollPosX = myScrollPosX + offsetX;
    }
    

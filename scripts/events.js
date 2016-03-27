@@ -2,14 +2,19 @@
              
                 ansicanvas = document.getElementById('ansi');
                 
-                ansicanvas.addEventListener('mousedown', function(e) {
+                document.addEventListener('mousedown', function(e) {
                     
 						if (singleClick == false)
 						{
 							 singleClick=true;
 							 setTimeout(function() { singleClick = false; }, 300);
 						} else {
-							showOverlay();
+							if (document.getElementById('overlay').style.display!="inline")
+							{						
+								showOverlay();
+							} else {
+								hideOverlay();
+							}
 						}
 
                         var window_innerWidth = (visibleWidth*(canvasCharacterWidth));
@@ -63,17 +68,17 @@
                   
                    if (movingY==true)
                    {
+					   console.log("movingY");
                        var mouse = getMousePos(ansicanvas, e);
                        var mx = mouse.x;
                        var my = mouse.y;
-                       scrollPosY=my;
-          
-            
+                       scrollPosY=my;           
                        redrawScreenMouseUpdate();
                    
                    } else
                    if (movingX==true) 
                    {
+					   console.log("movingX");
                        var mouse = getMousePos(ansicanvas, e);
                        var mx = mouse.x;
                        var my = mouse.y;
