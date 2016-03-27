@@ -57,6 +57,11 @@ function Interpreter(url) {
 							   }
 							   totalVisibleHeight=renderedMaxY;
 							   totalVisibleWidth=renderedMaxX;
+							   // Update popup
+							   
+							   document.getElementById('totalVisibleWidth').value=defaultTotalVisibleWidth;
+							   document.getElementById('totalVisibleHeight').value=totalVisibleHeight;
+							   document.getElementById('visibleWidth').value=visibleWidth;
 							  // alert("renderedMaxY: "+renderedMaxX+" screenCharacter.length: "+screenCharacterArray.length);
 						}
                 	});

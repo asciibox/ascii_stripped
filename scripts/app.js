@@ -200,8 +200,6 @@ makeCanvasBlack(); // codepagedisplay.js
            }
 		   finishedRendering=true;
 		   console.log("NOW IT SHOULD REDRAW");
-		   updateScrollbarX(true,0); // draw the scrollbar at the bottom, x position = 0 
-		   		updateScrollbarY(true,0); // Show a part of the scrollbar again
         }
         
 	   /* This sets the correct variables from the values visibleWidth, visibleHeight and totalVisibleWidth and totalVisibleHeight **/
@@ -222,6 +220,7 @@ makeCanvasBlack(); // codepagedisplay.js
             
             if (resizeToScreen==false) {
             
+				// This is what is used most often
                 fullCanvasWidth=Math.floor(defaultTotalVisibleWidth*8*characterWidthPct);
                 fullCanvasHeight=Math.floor(defaultTotalVisibleWidth*8*characterHeightPct);
 
@@ -229,8 +228,10 @@ makeCanvasBlack(); // codepagedisplay.js
                 canvasCharacterHeight=Math.floor(16*characterHeightPct);
                 canvas.width=renderedMaxX*(canvasCharacterWidth+1); //fullCanvasWidth;
                 canvas.height=(visibleHeight+renderedMaxY)*canvasCharacterHeight; // fullCanvasHeight; - set it to required size after rendering TODO
-			
-        
+				console.log("canvas.width: "+canvas.width+" canvas.height: "+canvas.height);
+				console.log("canvasCharacterHeight: "+canvasCharacterHeight);
+				console.log("canvas height = "+visibleHeight+"+"+renderedMaxY+"*"+canvasCharacterHeight);
+
             } else {
             
                 fullCanvasWidth=window_innerWidth; // Math.floor(width*8*characterWidthPct);

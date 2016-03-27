@@ -32,12 +32,13 @@
         var visibleHeight = 45; // Number of characters visible on the screen
 		var defaultVisibleWidth = visibleWidth;
 		var defaultVisibleHeight = visibleHeight;
-//        var totalVisibleWidth = 160; // This should be used to calculate canvasCharacterWidth accordingly
-//        var totalVisibleHeight=90; // This should calculate canvasCharacterHeight accordingly
-		var totalVisibleWidth = 0; // Set this to 0 to dynamically calculate the character size according to the format of the loaded .ANS file
-        var totalVisibleHeight=0;  // Set this to 0 to dynamically calculate the character size according to the format of the loaded .ANS file		
-		var defaultTotalVisibleWidth = totalVisibleWidth;
-		var defaultTotalVisibleHeight = totalVisibleHeight;
+		var totalVisibleWidth = 160; // Will get changed after drawChar
+        var totalVisibleHeight=45;  // Will get changed after drawChar	
+		//var defaultTotalVisibleWidth = totalVisibleWidth;
+		//var defaultTotalVisibleHeight = totalVisibleHeight;
+		var defaultTotalVisibleWidth = 0; // This should be used to calculate canvasCharacterWidth accordingly
+        var defaultTotalVisibleHeight=0; // This should calculate canvasCharacterHeight accordingly
+
 	</script>
 	<!-- This contains functionality to draw characters on the canvas -->
     <script src="scripts/codepagedisplay.js" type="text/javascript"></script>
@@ -128,7 +129,9 @@
   
    window.onload = function () {
 		if ( ( defaultTotalVisibleWidth==0) || ( defaultTotalVisibleHeight ==0) ) {
-			document.getElementById('setdyamicfontsize').checked=true;
+			document.getElementById('setdynamicfontsize').checked=true;
+			defaultTotalVisibleWidth=totalVisibleWidth;
+			defaultTotalVisibleHeight=totalVisibleHeight;
 		}
 		// Initialize the functionality to draw characters on the canvas, by using an image-map with the given filename (256 colors)
         codepage = new Codepage("assets/CO_437_8x16vga.png", function() { // codepagedisplay.js
@@ -152,17 +155,23 @@
 
 	function setSize() {
 			    document.getElementById('overlay').style.display='none';
-				visibleHeight = document.getElementById('visibleHeight').value;
-				visibleWidth = document.getElementById('visibleWidth').value;
-				totalVisibleHeight = document.getElementById('totalVisibleHeight').value;
-				totalVisibleWidth = document.getElementById('totalVisibleWidth').value;
-				var defaultTotalVisibleWidth = totalVisibleWidth;
-				var defaultTotalVisibleHeight = totalVisibleHeight;
-				var defaultVisibleWidth = visibleWidth;
-				var defaultVisibleHeight = visibleHeight;
+				//visibleHeight = parseInt(document.getElementById('visibleHeight').value);
+				//visibleWidth = parseInt(document.getElementById('visibleWidth').value);
+				//defaultVisibleWidth = visibleWidth;
+				//defaultVisibleHeight = visibleHeight;
+
+				//totalVisibleHeight = parseInt(document.getElementById('totalVisibleHeight').value);
+				totalVisibleWidth = parseInt(document.getElementById('totalVisibleWidth').value);
+				if  (document.getElementById('setdynamicfontsize').checked==true) {
+					defaultTotalVisibleWidth = 0;
+					//defaultTotalVisibleHeight = 0;
+				} else {
+					defaultTotalVisibleWidth = totalVisibleWidth;
+					//defaultTotalVisibleHeight = totalVisibleHeight;
+				}
 
 				var limit = 320;
-				if (visibleHeight>limit) 
+				/*if (visibleHeight>limit) 
 				{
 					alert("The height limit is "+limit+" characters");
 				} else if (visibleWidth>limit)
@@ -170,11 +179,13 @@
 					alert("The width limit is "+limit+" characters");
 				} else if (totalVisibleHeight>limit) 
 				{
-					alert("The total height limit is "+limit+" characters");
-				} else if (totalVisibleWidth>limit)
+					alert("The total height limit is "+limit+" characters, and "+totalVisibleHeight+" is below that value.");
+				} else*/ if (totalVisibleWidth>limit)
 				{
 					alert("The total width limit is "+limit+" characters");
 				} else {
+					console.log("REDRAWING");
+					console.log("visibleHeight:"+visibleHeight+" visibleWidth: "+visibleWidth+" totalVisibleHeight: "+totalVisibleHeight+" totalVisibleWidth: "+totalVisibleWidth+" defaultTotalVisibleWidth: "+defaultTotalVisibleWidth+" defaultTotalVisibleHeight: "+defaultTotalVisibleHeight);
 					finishedRendering=false;
 					drawCharacters=new Array();
 					makeCanvasBlack();
@@ -184,10 +195,6 @@
 	function showOverlay() {
 							document.getElementById('overlay').style.display="inline";
 							document.getElementById('visibleWidth').focus();
-							document.getElementById('visibleWidth').value=defaultVisibleWidth;
-							document.getElementById('visibleHeight').value=defaultVisibleHeight;
-							document.getElementById('totalVisibleWidth').value=defaultTotalVisibleWidth;
-							document.getElementById('totalVisibleHeight').value=defaultTotalVisibleHeight;
 	}
 
 	function hideOverlay() {
@@ -198,20 +205,20 @@
 <body>
 	
     <div style="width: 640px" class="centered">
-        <canvas id="ansi" width=640 height=8192></canvas> <!-- The size is certainly going to change. Where? Maybe in app.js through setANSICanvasSize() -->
+        <canvas id="ansi" width=640 height=8192></canvas> <!-- The size is certainly going to change. What happens when we make this value smaller? -->
     </div>
 	<div id="overlay">
 		<div id="changeSizePopup">
 		<a href="javascript:void(0)" onclick="hideOverlay();" id="close">X</a>
-	   <div class="inputgroup"><label>Visible width: </label><input type="text" oninput="//this.value = this.value.replace(/[^0-9]/g, ''); this.value = this.value.replace(/(\..*)\./g, '$1');" maxlength="3" id="visibleWidth">
+	   <div class="inputgroup"><label>Visible width: </label><input type="text" oninput="this.value = this.value.replace(/[^0-9]/g, ''); this.value = this.value.replace(/(\..*)\./g, '$1');" maxlength="3" id="visibleWidth" disabled>
 		</div>
-		<div class="inputgroup"><label>Visible height: </label><input type="text"  id="visibleHeight" oninput="//this.value = this.value.replace(/[^0-9]/g, ''); this.value = this.value.replace(/(\..*)\./g, '$1');" maxlength="3">
+		<div style="display:none;" class="inputgroup"><label>Visible height: </label><input type="text"  id="visibleHeight" oninput="this.value = this.value.replace(/[^0-9]/g, ''); this.value = this.value.replace(/(\..*)\./g, '$1');" maxlength="3" disabled>
 		</div>
-		<div class="inputgroup"><label>Total width: </label><input type="text"  id="totalVisibleWidth" oninput="//this.value = this.value.replace(/[^0-9]/g, ''); this.value = this.value.replace(/(\..*)\./g, '$1');" maxlength="3">
+		<div class="inputgroup"><label>Total width: </label><input type="text"  id="totalVisibleWidth" oninput="document.getElementById('setdynamicfontsize').checked=false; this.value = this.value.replace(/[^0-9]/g, ''); this.value = this.value.replace(/(\..*)\./g, '$1');" maxlength="3">
 		</div>
-		<div class="inputgroup"><label>Total height: </label><input type="text"  id="totalVisibleHeight" oninput="//this.value = this.value.replace(/[^0-9]/g, ''); this.value = this.value.replace(/(\..*)\./g, '$1');" maxlength="3" disabled="disabled">
+		<div class="inputgroup"><label>Total height: </label><input type="text"  id="totalVisibleHeight" oninput="document.getElementById('setdynamicfontsize').checked=false; this.value = this.value.replace(/[^0-9]/g, ''); this.value = this.value.replace(/(\..*)\./g, '$1');" maxlength="3" disabled="disabled">
 		</div>
-		<div class="inputgroup"><label>Set font size dynamically according to file format</label><input type="checkbox"  id="setdyamicfontsize" onchange="if (this.checked) {
+		<div class="inputgroup"><label>Set font size dynamically according to file format</label><input type="checkbox"  id="setdynamicfontsize" onchange="return; if (this.checked) {
 			document.getElementById('totalVisibleWidth').value=0;document.getElementById('totalVisibleHeight').value=0; }">
 		</div>
 		<input type="button" value="OK" onclick="setSize();">
