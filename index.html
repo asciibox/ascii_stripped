@@ -28,16 +28,17 @@
     <meta http-equiv="Content-type" content="text/html; charset=utf-8">
     <title>ascii stripped</title>
 	<script>
+		var debug=false;
 		var visibleWidth = 80; // Number of characters visible on the screen
-        var visibleHeight = 45; // Number of characters visible on the screen
-		var defaultVisibleWidth = visibleWidth;
-		var defaultVisibleHeight = visibleHeight;
-		var totalVisibleWidth = 160; // Will get changed after drawChar
-        var totalVisibleHeight=45;  // Will get changed after drawChar	
-		//var defaultTotalVisibleWidth = totalVisibleWidth;
-		//var defaultTotalVisibleHeight = totalVisibleHeight;
+                var visibleHeight = 45; // Number of characters visible on the screen
+                var renderedMaxX; // will contain the real x size
+                var renderedMaxY; // will contain the real y size
+		var totalVisibleWidth = 160;
+                var totalVisibleHeight=45;
 		var defaultTotalVisibleWidth = 0; // This should be used to calculate canvasCharacterWidth accordingly
-        var defaultTotalVisibleHeight=0; // This should calculate canvasCharacterHeight accordingly
+                var defaultTotalVisibleHeight=0; // This should calculate canvasCharacterHeight accordingly
+		var defaultVisibleWidth = visibleWidth; // Should get used only in connection with the popup
+		var defaultVisibleHeight = visibleHeight; // Popup only
 
 	</script>
 	<!-- This contains functionality to draw characters on the canvas -->
@@ -113,7 +114,6 @@
     }
     </style>
     <script>
-      var debug=false;
 		/*
         var JAVASCRIPT_TEXT_DROP_HERE_TO_UPLOAD="Drop files here to upload";
         var JAVASCRIPT_TEXT_UPLOAD_A_FILE="Upload a file"; 
@@ -150,7 +150,7 @@
                       registerEventListeners(); // app.js - if you want to clean it up you can create a class called App
 					  registerKeyEventListeners(); // app.js
             }); 
-            
+           
     }
 
 	function setSize() {
@@ -186,7 +186,7 @@
 				} else {
 					console.log("REDRAWING");
 					console.log("visibleHeight:"+visibleHeight+" visibleWidth: "+visibleWidth+" totalVisibleHeight: "+totalVisibleHeight+" totalVisibleWidth: "+totalVisibleWidth+" defaultTotalVisibleWidth: "+defaultTotalVisibleWidth+" defaultTotalVisibleHeight: "+defaultTotalVisibleHeight);
-					finishedRendering=false;
+					activateRequestAnimFrame=false;
 					drawCharacters=new Array();
 					makeCanvasBlack();
 					resize_canvas();

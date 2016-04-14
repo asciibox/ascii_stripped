@@ -39,29 +39,39 @@ function Interpreter(url) {
                     onEscape    : escapesCursor.escape,
                     onLiteral   : modified_write2,
                     onComplete  : function() {
-								console.log("COMPLETE");
-								setCanvasSize(document.getElementById("ansi")); // This creates the canvas for us  
-								makeCanvasBlack();
-								finishedRendering=true;						
-								if (renderedMaxY > defaultVisibleHeight)
-							    { 
+                                                            if (debug==true) { // Shows line numbers
+                                                               for (var y = 0; y < screenCharacterArray.length; y++) {
+                                                                   writeToScreenCharacterArray(parseInt(y), String(y));
+                                                               }
+                                                            }
+                                                            
+                                                            console.log("COMPLETE");
+                                                            setCanvasSize(document.getElementById("ansi")); // This creates the canvas for us  
+							    
+												
+                                                           if (renderedMaxY > defaultVisibleHeight)
+							   { 
 								   visibleHeight = defaultVisibleHeight;
-							    } else {
+							   } else {
 								   visibleHeight = renderedMaxY;
 							   }
 							   if (renderedMaxX > defaultVisibleWidth)
 							   {
-								   visibleWidth = defaultVisibleWidth;
+								   visibleWidth = defaultVisibleWidth+1;
 							   } else {
-								   visibleWidth = renderedMaxX;
+								   visibleWidth = renderedMaxX+1;
 							   }
 							   totalVisibleHeight=renderedMaxY;
-							   totalVisibleWidth=renderedMaxX;
+							 //  totalVisibleWidth=renderedMaxX;
 							   // Update popup
 							   
 							   document.getElementById('totalVisibleWidth').value=defaultTotalVisibleWidth;
 							   document.getElementById('totalVisibleHeight').value=totalVisibleHeight;
 							   document.getElementById('visibleWidth').value=visibleWidth;
+                                                           
+                                                           makeCanvasBlack();
+                                                           activateRequestAnimFrame=true;		
+                                                           
 							  // alert("renderedMaxY: "+renderedMaxX+" screenCharacter.length: "+screenCharacterArray.length);
 						}
                 	});
@@ -79,6 +89,23 @@ function Interpreter(url) {
 
 		
     }
+    
+function writeToScreenCharacterArray(y, what) {
+ 
+    var counter = new Array();
+  
+    for (var z = 0; z < what.length; z++)
+    {
+                         var myCharArray=new Array();
+                         myCharArray[0]=what.charCodeAt(z);
+                         myCharArray[1]=3;
+                         myCharArray[2]=1;
+                         if (typeof(screenCharacterArray[y])=="undefined") screenCharacterArray[y]=new Array();
+                         
+                         screenCharacterArray[y][z]=myCharArray;
+    }
+    
+}
     
 function modified_write2(text) {
 
@@ -161,7 +188,5 @@ function modified_write2(text) {
                     cursor.row--;
                 }
             }
-        
-
 
 }
