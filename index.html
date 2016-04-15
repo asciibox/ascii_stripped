@@ -28,7 +28,10 @@
     <meta http-equiv="Content-type" content="text/html; charset=utf-8">
     <title>ascii stripped</title>
 	<script>
+		var canvases=2;
+		var ctx2 = null;
 		var debug=false;
+		
 		var visibleWidth = 80; // Number of characters visible on the screen
                 var visibleHeight = 45; // Number of characters visible on the screen
                 var renderedMaxX; // will contain the real x size
@@ -128,6 +131,18 @@
 
   
    window.onload = function () {
+
+	   setTimeout(function() { document.getElementById('ansi2').style.display='none'; }, 2000);
+   		// THIS IS NEW
+   		if (canvases==2) {
+	        var newCanvas = document.createElement("canvas");
+    	    newCanvas.setAttribute("width", width);
+	        newCanvas.setAttribute("height", height);
+    	    newCanvas.setAttribute("id", "ansi2");
+	        document.getElementById('canvas_holder').appendChild(newCanvas);
+	        ctx2 = document.getElementById('ansi2').getContext("2d");;
+        }
+   		
 		if ( ( defaultTotalVisibleWidth==0) || ( defaultTotalVisibleHeight ==0) ) {
 			document.getElementById('setdynamicfontsize').checked=true;
 			defaultTotalVisibleWidth=totalVisibleWidth;
@@ -204,7 +219,7 @@
 </head>
 <body>
 	
-    <div style="width: 640px" class="centered">
+    <div style="width: 640px" id="canvas_holder" class="centered">
         <canvas id="ansi" width=640 height=8192></canvas> <!-- The size is certainly going to change. What happens when we make this value smaller? -->
     </div>
 	<div id="overlay">

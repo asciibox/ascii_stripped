@@ -30,15 +30,6 @@ var renderedMaxY = 0;
 function Codepage(codepageUrl, callback) {
     var COLORS, img;
 
-    function createCanvas(width, height) {
-
-        var newCanvas = document.createElement("canvas");
-        newCanvas.setAttribute("width", width);
-        newCanvas.setAttribute("height", height);
-
-        return newCanvas;
-    }
-
     /** Let's load the image map. See interpreter.js **/
     img = new Image();
     img.onload = function () {
@@ -112,12 +103,6 @@ function Codepage(codepageUrl, callback) {
 
     }
 
-
-    /** Creates an own instance of a canvas object with its own context **/
-    /*function generateDisplay(width, height) {
-     return createCanvas(fullCanvasWidth, fullCanvasHeight);
-     }*/
-
     return {"drawChar": drawChar};
 }
 
@@ -132,7 +117,8 @@ function makeCanvasBlack() {
 }
 
 /* This sets the correct variables from the values visibleWidth, visibleHeight and totalVisibleWidth and totalVisibleHeight **/
-function setCanvasSize(canvas) {
+function setCanvasSize() {
+
 
     // If set to 0 use just modified variables like visibleWidth and visibleHeight to calculate the font size
     if ((defaultTotalVisibleWidth == 0) || (defaultTotalVisibleHeight == 0))
@@ -144,8 +130,19 @@ function setCanvasSize(canvas) {
     var window_innerHeight = window.innerHeight;
     // defaultTotalVisibleWidth and defaultTotalVisibleHeight get used to calculate the font size. These variables do not get changed anywhere and can only get set in index.html, nowhere else.
     // Or by setting them to 0, then the 2 variables get assigned by the variables visibleWidth and visibleHeight above
-    var characterWidthPct = window_innerWidth / (defaultTotalVisibleWidth * 8); // How often does the character fit into the width
-    var characterHeightPct = window_innerHeight / (defaultTotalVisibleHeight * 16);  // How often does the character fit into the height
+    var characterWidthPct = window_innerWidth / ((defaultTotalVisibleWidth+1) * 8); // How often does the character fit into the width
+
+	// If there is a scrollbar
+	
+	if (renderedMaxX>visibleWidth)
+	{
+		var characterHeightPct = window_innerHeight / ((defaultTotalVisibleHeight) * 16);  // How often does the character fit into the height
+	} else {
+		// no scrollbar
+		
+		var characterHeightPct = window_innerHeight / ((defaultTotalVisibleHeight-2) * 16);  // How often does the character fit into the height
+	}
+	var canvas=document.getElementById('ansi');
 
     if (resizeToScreen == false) {
 
@@ -155,8 +152,18 @@ function setCanvasSize(canvas) {
 
         canvasCharacterWidth = Math.floor(8 * characterWidthPct);
         canvasCharacterHeight = Math.floor(16 * characterHeightPct);
+        //alert(canvasCharacterWidth+"/"+canvasCharacterHeight);
         canvas.width = (renderedMaxX+4) * (canvasCharacterWidth ); //fullCanvasWidth;
-        canvas.height = (visibleHeight + renderedMaxY) * canvasCharacterHeight; // fullCanvasHeight; - set it to required size after rendering TODO
+        if (canvases==1) {
+        	canvas.height = (visibleHeight + renderedMaxY) * canvasCharacterHeight; // fullCanvasHeight; - set it to required size after rendering TODO
+        	
+        } else {
+        	canvas.height = (visibleHeight * canvasCharacterHeight); // fullCanvasHeight; - set it to required size after rendering TODO        	
+        	document.getElementById('ansi2').height=(visibleHeight + renderedMaxY) * canvasCharacterHeight; // fullCanvasHeight; - set it to required size after rendering TODO
+        	document.getElementById('ansi2').width=(renderedMaxX+4) * (canvasCharacterWidth ); // fullCanvasHeight; - set it to required size after rendering TODO
+        }
+        
+        
         //console.log("canvas.width: "+canvas.width+" canvas.height: "+canvas.height);
         //console.log("canvasCharacterHeight: "+canvasCharacterHeight);
         //console.log("canvas height = "+visibleHeight+"+"+renderedMaxY+"*"+canvasCharacterHeight);

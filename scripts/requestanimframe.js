@@ -108,16 +108,25 @@ function render() {
                             var myx = (myasciiCode % 32) * characterWidth+(xpos*256);
                             var myy = Math.floor(myasciiCode / 32) * characterHeight + (ypos*128);
 
+							// If it needs to get drawn at the top
 							if (realY < visibleHeight-1) {
 
 						    	// Then the character from the image gets copied to the canvas
                             	//alert("1:myx="+myx+" myy="+myy+" x="+x+" y="+y+"CW1:"+characterHeight+" canvasCharacterHeight:"+canvasCharacterHeight);
+								if (realX<visibleWidth)
+								{								
+										ctx.drawImage(codepageImg, myx, myy, characterWidth, characterHeight, x, y, canvasCharacterWidth, canvasCharacterHeight);
+								}
+										if (canvases==2) {
+										ctx.drawImage(codepageImg, myx, myy, characterWidth, characterHeight, x, y+(visibleHeight*canvasCharacterHeight), canvasCharacterWidth, canvasCharacterHeight);
+										}
 								
-                            	//ctx.drawImage(codepageImg, myx, myy, characterWidth, characterHeight, x, y, canvasCharacterWidth, canvasCharacterHeight);
-                            	ctx.drawImage(codepageImg, myx, myy, characterWidth, characterHeight, x, y+(visibleHeight*canvasCharacterHeight), canvasCharacterWidth, canvasCharacterHeight);
-                            } else {
-                            	ctx.drawImage(codepageImg, myx, myy, characterWidth, characterHeight, x, y+(visibleHeight*canvasCharacterHeight), canvasCharacterWidth, canvasCharacterHeight);
-                            }
+                            } 
+                            	if (canvases==2) {
+                            		ctx2.drawImage(codepageImg, myx, myy, characterWidth, characterHeight, x, y, canvasCharacterWidth, canvasCharacterHeight);
+                            	} else {
+                            		//ctx.drawImage(codepageImg, myx, myy, characterWidth, characterHeight, x, y+(visibleHeight*canvasCharacterHeight), canvasCharacterWidth, canvasCharacterHeight);
+                            	}
 							
                         }
                         
@@ -125,25 +134,35 @@ function render() {
                         while (xpos >= 16) xpos=xpos-16;
                         var ypos = Math.floor(foreground/16);
 
-                        if (realY < visibleHeight-1) 
+                        if (realY < visibleHeight-1)
                         { 
-                          var myx = (asciiCode % 32) * characterWidth+(xpos*256);
-                          var myy = Math.floor(asciiCode / 32) * characterHeight + (ypos*128);
-                          
-                          // standard drawing
-                          //ctx.drawImage(codepageImg, myx, myy, characterWidth, characterHeight, x, y, canvasCharacterWidth, canvasCharacterHeight);
-                          
-                          // now add visibleHeight to it, to draw it below the main image again
-                          y+=(visibleHeight*canvasCharacterHeight);
-                          
-                          ctx.drawImage(codepageImg, myx, myy, characterWidth, characterHeight, x, y, canvasCharacterWidth, canvasCharacterHeight);
+							var myx = (asciiCode % 32) * characterWidth+(xpos*256);
+							var myy = Math.floor(asciiCode / 32) * characterHeight + (ypos*128);
+							if (realX<visibleWidth)
+								{	
+									  
+									  
+									  // standard drawing
+									  //ctx.drawImage(codepageImg, myx, myy, characterWidth, characterHeight, x, y, canvasCharacterWidth, canvasCharacterHeight);
+									  
+									  // now add visibleHeight to it, to draw it below the main image again
+									  
+									  ctx.drawImage(codepageImg, myx, myy, characterWidth, characterHeight, x, y, canvasCharacterWidth, canvasCharacterHeight);
+								}
+						  if (canvases==2) {
+                          	ctx2.drawImage(codepageImg, myx, myy, characterWidth, characterHeight, x, y, canvasCharacterWidth, canvasCharacterHeight);
+                          }
                           
                         } else {
                           
-                          var myx = (asciiCode % 32) * characterWidth+(xpos*256);
-                          var myy = Math.floor(asciiCode / 32) * characterHeight + (ypos*128);
-                          y+=(visibleHeight*canvasCharacterHeight);
-                          ctx.drawImage(codepageImg, myx, myy, characterWidth, characterHeight, x, y, canvasCharacterWidth, canvasCharacterHeight);
+                          	  var myx = (asciiCode % 32) * characterWidth+(xpos*256);
+	                          var myy = Math.floor(asciiCode / 32) * characterHeight + (ypos*128);
+                          
+                          if (canvases==1) {
+        	                  ctx.drawImage(codepageImg, myx, myy, characterWidth, characterHeight, x, y+visibleHeight*canvasCharacterHeight, canvasCharacterWidth, canvasCharacterHeight);
+                          } else { // draw on the other canvas
+        	                  ctx2.drawImage(codepageImg, myx, myy, characterWidth, characterHeight, x, y, canvasCharacterWidth, canvasCharacterHeight);
+                          }
                           
                           
                         }
@@ -151,6 +170,7 @@ function render() {
 						drawCharacters.shift();
 						if (drawCharacters.length==0)
 						{
+							// Check: Really needed?
 							doRedraw(); // Draw upper screen within the scrollbar
 						}
 

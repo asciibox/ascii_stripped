@@ -54,7 +54,7 @@ function drawVerticalLine(fromRealX, toCursorX) {
 /** This are global variables. When they get set somewhere, i.e. when scrolling occurs, this gets called. This behaves very much like a setTimeout, so the other functions hopefully are not lacking timeouts **/
 function scrollDown() { // Scrolling down means the scrollbar scrolls down. The canvas moves up.
     
-    if (firstLine+visibleHeight<totalVisibleHeight)
+    if (firstLine+visibleHeight<renderedMaxY)
     {
         firstLine += 1;
         visibleYStart++;
@@ -86,7 +86,7 @@ function scrollLeft() {
 }
 
 function scrollRight() { // Scrolling right means the scrollbar moves the the right. The canvas moves to the left side.
-    if (leftLine < totalVisibleWidth)
+    if (leftLine < renderedMaxX)
     {
         leftLine++;
         visibleXStart++;
@@ -98,18 +98,19 @@ function scrollRight() { // Scrolling right means the scrollbar moves the the ri
 /** This redraws the vertial scrollbar **/
 var scrollBarHeight;
 function updateScrollbarY(drawTopBlackside, offsetY) {
-
     if (typeof (offsetY) == "undefined")
         offsetY = 0;
 
     var myScrollPosX = ((visibleWidth + 1) * canvasCharacterWidth) - parseInt(canvasCharacterWidth) + 3; // I don't know why there is a 3...
 
-    var window_innerHeight = (visibleHeight * (canvasCharacterHeight));
-    scrollBarHeight = ((visibleHeight) / totalVisibleHeight) * window_innerHeight;
-    console.log("visibleHeight" + visibleHeight + "totalVisibleHeight" + totalVisibleHeight + "window_innerHeight" + window_innerHeight)
-    //console.log("firstLine:"+firstLine+" totalVisibleHeight:"+totalVisibleHeight+" visibleHeight: "+visibleHeight+" window_innerHeight:"+window_innerHeight);
+	
+		var window_innerHeight = ((visibleHeight-1) * (canvasCharacterHeight));
+	
+    scrollBarHeight = ((visibleHeight) / renderedMaxY) * window_innerHeight;
+    console.log("visibleHeight" + visibleHeight + "renderedMaxY" + renderedMaxY + "window_innerHeight" + window_innerHeight)
+    //console.log("firstLine:"+firstLine+" renderedMaxY:"+renderedMaxY+" visibleHeight: "+visibleHeight+" window_innerHeight:"+window_innerHeight);
    
-    myScrollPosY = (firstLine / totalVisibleHeight) * window_innerHeight - 1;
+    myScrollPosY = (firstLine / renderedMaxY) * window_innerHeight - 1;
 
     //console.log("myScrollPosY:"+myScrollPosY);
     if (myScrollPosY + offsetY < 0) {
@@ -176,8 +177,8 @@ function updateScrollbarX(drawLeftBlackside, offsetX) {
     var window_innerWidth = ((visibleWidth) * (canvasCharacterWidth));
     /* var context = document.getElementById("ansi").getContext("2d");
      var scroll_y=(window.innerHeight)
-     myScrollPosX = (leftLine / (totalVisibleWidth-1))*window_innerWidth;
-     var visibleContentRatio = visibleWidth/totalVisibleWidth;
+     myScrollPosX = (leftLine / (renderedMaxX-1))*window_innerWidth;
+     var visibleContentRatio = visibleWidth/renderedMaxX;
      var gripSize = visibleWidth * visibleContentRatio;
      if (myScrollPosX+offsetX+scrollBarWidth>window_innerWidth) {
      myScrollPosX=window_innerWidth-offsetX-scrollBarWidth;
@@ -210,10 +211,10 @@ function updateScrollbarX(drawLeftBlackside, offsetX) {
 
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++// 
 
-    myScrollPosX = (leftLine / (totalVisibleWidth - 1)) * window_innerWidth;
+    myScrollPosX = (leftLine / (renderedMaxX - 1)) * window_innerWidth;
 
-    scrollBarWidth = (visibleWidth / totalVisibleWidth) * window_innerWidth;
-    console.log("visibleWidth:" + visibleWidth + " totalVisibleWidth: " + totalVisibleWidth + " window_innerWidth: " + window_innerWidth);
+    scrollBarWidth = (visibleWidth / renderedMaxX) * window_innerWidth;
+    console.log("visibleWidth:" + visibleWidth + " renderedMaxX: " + renderedMaxX + " window_innerWidth: " + window_innerWidth);
     if (myScrollPosX + offsetX + scrollBarWidth > window_innerWidth) {
         myScrollPosX = window_innerWidth - offsetX - scrollBarWidth;
     } else
@@ -276,6 +277,9 @@ function doRedraw() {
     doClearScreen(false);
 
     var lowerFrameStart = visibleWidth * canvasCharacterHeight; // redrawX + visibleXStart
+    
+    if (canvases==1) {
+		
     var sx = visibleXStart * canvasCharacterWidth; // The x coordinate of the upper left corner of the rectangle from which the ImageData will be extracted.
     var sy = (visibleHeight + visibleYStart + 1) * canvasCharacterHeight; // The y coordinate of the upper left corner of the rectangle from which the ImageData will be extracted.
     var sw = (visibleWidth) * canvasCharacterWidth; // The width of the rectangle from which the ImageData will be extracted.
@@ -283,6 +287,17 @@ function doRedraw() {
     //console.log("sx: "+sx+" sy: "+sy+" sw: "+sw+" sh: "+sh);
     var imgData = ctx.getImageData(sx, sy, sw, sh);
     ctx.putImageData(imgData, 0, 0);
+    
+    } else {
+    var sx = visibleXStart * canvasCharacterWidth; // The x coordinate of the upper left corner of the rectangle from which the ImageData will be extracted.
+    var sy = ( visibleYStart ) * canvasCharacterHeight; // The y coordinate of the upper left corner of the rectangle from which the ImageData will be extracted.
+    var sw = (visibleWidth) * canvasCharacterWidth; // The width of the rectangle from which the ImageData will be extracted.
+    var sh = (visibleHeight - 1) * canvasCharacterHeight; // The height of the rectangle from which the ImageData will be extracted. 
+    //console.log("sx: "+sx+" sy: "+sy+" sw: "+sw+" sh: "+sh);
+    var imgData = ctx2.getImageData(sx, sy, sw, sh);
+    ctx.putImageData(imgData, 0, 0);
+    
+    }
 
     updateScrollbarX(true, 0); // draw the scrollbar at the bottom, x position = 0 
     updateScrollbarY(true, 0); // Show a part of the scrollbar again

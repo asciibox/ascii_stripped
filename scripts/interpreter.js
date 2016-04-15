@@ -39,6 +39,7 @@ function Interpreter(url) {
                     onEscape    : escapesCursor.escape,
                     onLiteral   : modified_write2,
                     onComplete  : function() {
+                        // Only serves the purpose of debugging, remove later
                                                             if (debug==true) { // Shows line numbers
                                                                for (var y = 0; y < screenCharacterArray.length; y++) {
                                                                    writeToScreenCharacterArray(parseInt(y), String(y));
@@ -46,7 +47,7 @@ function Interpreter(url) {
                                                             }
                                                             
                                                             console.log("COMPLETE");
-                                                            setCanvasSize(document.getElementById("ansi")); // This creates the canvas for us  
+                                                            setCanvasSize(); // This creates the canvas for us  
 							    
 												
                                                            if (renderedMaxY > defaultVisibleHeight)
@@ -169,7 +170,7 @@ function modified_write2(text) {
 					//prevy = y;
 					// globalContext is = document.getElementById("ansi").getContext("2d");
 					codepage.drawChar(globalContext, charcode, foreground, background, x, y); // , transparent, storeCharacter, storeCharacterX) 
-					if (cursor.column === visibleWidth) { // visibleWidth used here, otherwise translation errors. This seems to be that way because normal screens normally stopped at 80. Format check would be an option.
+					if (cursor.column === totalVisibleWidth) { // visibleWidth used here, otherwise translation errors. This seems to be that way because normal screens normally stopped at 80. Format check would be an option.
                         cursor.column = 1;
                         cursor.row++;
                     } else {
