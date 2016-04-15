@@ -69,7 +69,7 @@ function getTotalDisplayHeight() {
 window.onresize = function () {
     activateRequestAnimFrame = false;
     drawCharacters = new Array();
-    makeCanvasBlack();
+    makeCanvasBlack(document.getElementById("ansi"));
     if (resizeTO)
         clearTimeout(this.resizeTO);
     resizeTO = setTimeout(function () {
@@ -84,7 +84,10 @@ function resize_canvas() {
     // Now set the new canvas dimensions
     console.log("RESIZE SIZE");
     setCanvasSize(document.getElementById("ansi")); // This creates the canvas for us
-    makeCanvasBlack(); // codepagedisplay.js
+    makeCanvasBlack(document.getElementById("ansi")); // codepagedisplay.js
+    if (canvases==2) {
+    makeCanvasBlack(document.getElementById("ansi2"));
+    }
     // Then draw all characters again
     console.log("RESIZE CHARS");
 

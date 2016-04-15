@@ -70,7 +70,9 @@ function Interpreter(url) {
 							   document.getElementById('totalVisibleHeight').value=totalVisibleHeight;
 							   document.getElementById('visibleWidth').value=visibleWidth;
                                                            
-                                                           makeCanvasBlack();
+                                                           if (canvases==2) {
+                                                           makeCanvasBlack(document.getElementById("ansi2"));;
+                                                           }
                                                            activateRequestAnimFrame=true;		
                                                            
 							  // alert("renderedMaxY: "+renderedMaxX+" screenCharacter.length: "+screenCharacterArray.length);
