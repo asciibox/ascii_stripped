@@ -54,7 +54,7 @@ function drawVerticalLine(fromRealX, toCursorX) {
 /** This are global variables. When they get set somewhere, i.e. when scrolling occurs, this gets called. This behaves very much like a setTimeout, so the other functions hopefully are not lacking timeouts **/
 function scrollDown() { // Scrolling down means the scrollbar scrolls down. The canvas moves up.
     
-    if (firstLine+visibleHeight<renderedMaxY)
+    if (firstLine+visibleHeight<=renderedMaxY)
     {
         firstLine += 1;
         visibleYStart++;
@@ -78,7 +78,8 @@ function scrollUp() { // Scrolling up means the scrollbar scrolls up. The canvas
 function scrollLeft() {
     if (leftLine > 0)
     {
-        leftLine--;
+        myScrollPosX = (leftLine / (renderedMaxX - 1)) * window_innerWidth;
+		leftLine--;
         visibleXStart--;
         doRedraw(); // scrollbar.js
         updateScrollbarX(true, 0); // Show a part of the scrollbar again, scrollbar.js
@@ -86,12 +87,14 @@ function scrollLeft() {
 }
 
 function scrollRight() { // Scrolling right means the scrollbar moves the the right. The canvas moves to the left side.
-    if (leftLine < renderedMaxX)
+ 
+   if ((leftLine*2) < renderedMaxX) 
     {
-        leftLine++;
-        visibleXStart++;
-        doRedraw(); // scrollbar.js
+	myScrollPosX = (leftLine / (renderedMaxX - 1)) * window_innerWidth;
+	    doRedraw(); // scrollbar.js
         updateScrollbarX(true, 0); // Show a part of the scrollbar again, scrollbar.js
+		 leftLine++;
+        visibleXStart++;
     }
 }
 
@@ -107,7 +110,7 @@ function updateScrollbarY(drawTopBlackside, offsetY) {
 		var window_innerHeight = ((visibleHeight-1) * (canvasCharacterHeight));
 	
     scrollBarHeight = ((visibleHeight) / renderedMaxY) * window_innerHeight;
-    console.log("visibleHeight" + visibleHeight + "renderedMaxY" + renderedMaxY + "window_innerHeight" + window_innerHeight)
+   // console.log("visibleHeight" + visibleHeight + "renderedMaxY" + renderedMaxY + "window_innerHeight" + window_innerHeight)
     //console.log("firstLine:"+firstLine+" renderedMaxY:"+renderedMaxY+" visibleHeight: "+visibleHeight+" window_innerHeight:"+window_innerHeight);
    
     myScrollPosY = (firstLine / renderedMaxY) * window_innerHeight - 1;
@@ -133,20 +136,20 @@ function updateScrollbarY(drawTopBlackside, offsetY) {
      context.strokeStyle = 'red';
      context.stroke();
      }*/
-    context.clearRect(myScrollPosX + 1, 0, 2 * canvasCharacterWidth, window_innerHeight);
-    context.beginPath();
+    context.clearRect(myScrollPosX , 0, 2 * canvasCharacterWidth+1, window_innerHeight+50);
+/*     context.beginPath();
     context.rect(myScrollPosX + 1, 0, 2 * canvasCharacterWidth, window_innerHeight);
     context.fillStyle = '#aaa';
-    context.fill();
+    context.fill(); */
     
     context.beginPath();
-    context.rect(myScrollPosX + 1, 0, 2 * canvasCharacterWidth, window_innerHeight+50);
+    context.rect(myScrollPosX , 0, 2 * canvasCharacterWidth+1, window_innerHeight+50);
     context.fillStyle = '#bbb';
     context.fill();
     
     context.beginPath();
    
-    context.rect(myScrollPosX + 1, myScrollPosY + offsetY, 2 * canvasCharacterWidth, scrollBarHeight+canvasCharacterHeight);
+    context.rect(myScrollPosX + 1, myScrollPosY + offsetY, (2 * canvasCharacterWidth)-1, scrollBarHeight+canvasCharacterHeight);
     context.fillStyle = '#555';
     context.fill();
     context.lineWidth = 7;
@@ -154,7 +157,7 @@ function updateScrollbarY(drawTopBlackside, offsetY) {
     // context.stroke();
     // console.log(myScrollPosX+1, myScrollPosY+offsetY, 2*canvasCharacterWidth, scrollBarHeight)
     // We can also do this afterwards
-    if ((drawTopBlackside == 0) || (drawTopBlackside == 2)) {
+/*     if ((drawTopBlackside == 0) || (drawTopBlackside == 2)) {
         context.beginPath();
         context.rect(myScrollPosX + 1, myScrollPosY + scrollBarHeight + offsetY, 2 * canvasCharacterWidth, window_innerHeight - (myScrollPosY + scrollBarHeight));
         context.fillStyle = 'green';
@@ -162,19 +165,19 @@ function updateScrollbarY(drawTopBlackside, offsetY) {
         context.lineWidth = 7;
         context.strokeStyle = 'black';
         context.stroke();
-    }
+    } */
     //scrollPosY = myScrollPosY+offsetY;
 
 }
 
 /** This redraws the horizontal scrollbar **/
-var scrollBarWidth, myScrollPosX;
+var scrollBarWidth, myScrollPosX=0,window_innerWidth;
 function updateScrollbarX(drawLeftBlackside, offsetX) {
 
     if (typeof (offsetX) == "undefined")
         offsetX = 0;
 
-    var window_innerWidth = ((visibleWidth) * (canvasCharacterWidth));
+    window_innerWidth = ((visibleWidth) * (canvasCharacterWidth));
     /* var context = document.getElementById("ansi").getContext("2d");
      var scroll_y=(window.innerHeight)
      myScrollPosX = (leftLine / (renderedMaxX-1))*window_innerWidth;
@@ -211,11 +214,12 @@ function updateScrollbarX(drawLeftBlackside, offsetX) {
 
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++// 
 
-    myScrollPosX = (leftLine / (renderedMaxX - 1)) * window_innerWidth;
-
+   // 
+//console.log("myScrollPosX:"+myScrollPosX)
     scrollBarWidth = (visibleWidth / renderedMaxX) * window_innerWidth;
-    console.log("visibleWidth:" + visibleWidth + " renderedMaxX: " + renderedMaxX + " window_innerWidth: " + window_innerWidth);
+    //console.log("visibleWidth:" + visibleWidth + " renderedMaxX: " + renderedMaxX + " window_innerWidth: " + window_innerWidth);
     if (myScrollPosX + offsetX + scrollBarWidth > window_innerWidth) {
+		
         myScrollPosX = window_innerWidth - offsetX - scrollBarWidth;
     } else
     if (myScrollPosX + offsetX < 0) {
@@ -238,20 +242,22 @@ function updateScrollbarX(drawLeftBlackside, offsetX) {
      } */
     if (scrollBarWidth < window_innerWidth)
     {
-        var scroll_y = (window.innerHeight)
+	
+        var scroll_y = (document.getElementById('ansi').height)
         context.beginPath();
-        context.rect(0, scroll_y - Math.floor(canvasCharacterHeight*1.5), window_innerWidth, Math.floor(canvasCharacterHeight * 1.5) + 3);
+        context.rect(0, scroll_y - Math.floor(canvasCharacterHeight*1.5)+6, window_innerWidth, Math.floor(canvasCharacterHeight * 1.5) + 3);
         context.fillStyle = '#bbb';
         context.fill();
-        context.lineWidth = 7;
-        context.strokeStyle = '#bbb';
+       // context.lineWidth = 7;
+       // context.strokeStyle = '#bbb';
 
         // Yellow part
         context.beginPath();
-        context.rect(myScrollPosX + 1 + offsetX, scroll_y - Math.floor(canvasCharacterHeight*1.25), scrollBarWidth, Math.floor(canvasCharacterHeight * 0.95));
+        context.rect(myScrollPosX + 1 + offsetX, scroll_y - Math.floor(canvasCharacterHeight*1.25)+3, scrollBarWidth-2, Math.floor(canvasCharacterHeight * 0.95));
         context.fillStyle = '#555';
         context.fill();
-    }
+		//console.log("offsetX"+(offsetX))
+    } 
     // context.lineWidth = 7;
     // context.strokeStyle = 'green';
     // context.stroke();

@@ -47,7 +47,7 @@ function doClearScreen() {
 
     //   ctx.fillRect(0, 0, document.getElementById("ansi").getContext("2d").width, document.getElementById("ansi").getContext("2d").height);
 
-    console.log((window_innerWidth - canvasCharacterWidth) + "---" + (window_innerHeight - (canvasCharacterHeight * 1)))
+   // console.log((window_innerWidth - canvasCharacterWidth) + "---" + (window_innerHeight - (canvasCharacterHeight * 1)))
     // clears everything
     //ctx.fillRect(0, 0, document.getElementById('ansi').width, document.getElementById('ansi').height);
 }
@@ -69,7 +69,7 @@ function getTotalDisplayHeight() {
 window.onresize = function () {
     activateRequestAnimFrame = false;
     drawCharacters = new Array();
-    makeCanvasBlack(document.getElementById("ansi"));
+    makeCanvasBlack();
     if (resizeTO)
         clearTimeout(this.resizeTO);
     resizeTO = setTimeout(function () {
@@ -84,10 +84,7 @@ function resize_canvas() {
     // Now set the new canvas dimensions
     console.log("RESIZE SIZE");
     setCanvasSize(document.getElementById("ansi")); // This creates the canvas for us
-    makeCanvasBlack(document.getElementById("ansi")); // codepagedisplay.js
-    if (canvases==2) {
-    makeCanvasBlack(document.getElementById("ansi2"));
-    }
+    makeCanvasBlack(); // codepagedisplay.js
     // Then draw all characters again
     console.log("RESIZE CHARS");
 

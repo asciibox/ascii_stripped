@@ -106,18 +106,19 @@ function Codepage(codepageUrl, callback) {
     return {"drawChar": drawChar};
 }
 
-function makeCanvasBlack(canvasWithoutContext) {
+function makeCanvasBlack() {
 
     var bgstring = "#000000";
-    var myctx = canvasWithoutContext.getContext("2d");
-    myctx.fillStyle = bgstring;
+    ctx = document.getElementById("ansi").getContext("2d");
+    ctx.fillStyle = bgstring;
 
     // clears everything
-    myctx.fillRect(0, 0, canvasWithoutContext.width, canvasWithoutContext.height);
+    ctx.fillRect(0, 0, document.getElementById('ansi').width, document.getElementById('ansi').height);
 }
 
 /* This sets the correct variables from the values visibleWidth, visibleHeight and totalVisibleWidth and totalVisibleHeight **/
 function setCanvasSize() {
+
 
     // If set to 0 use just modified variables like visibleWidth and visibleHeight to calculate the font size
     if ((defaultTotalVisibleWidth == 0) || (defaultTotalVisibleHeight == 0))

@@ -2,8 +2,9 @@ function registerEventListeners() {
 
     ansicanvas = document.getElementById('ansi');
     var window_innerWidth, window_innerHeight;
+	
     document.addEventListener('mousedown', function (e) {
-
+	var gridStartY =(document.getElementById('ansi').height) - Math.floor(canvasCharacterHeight*1.25)+3;
         if (singleClick == false)
         {
             singleClick = true;
@@ -27,9 +28,13 @@ function registerEventListeners() {
         var mx = mouse.x;
 
         var myScrollbarY = window_innerHeight - canvasCharacterHeight;
+//console.log("1: "+(my > (window.innerHeight - (4*canvasCharacterHeight))))
+//console.log("2: "+(my > (mx > myScrollPosX)))
+//console.log("3: "+(my > (mx < ( myScrollPosX + scrollBarWidth))))
 
-        if (my > (window.innerHeight - 4*canvasCharacterHeight) && mx > myScrollPosX && mx < ( myScrollPosX + scrollBarWidth)) {
+        if (my > gridStartY && mx > myScrollPosX && mx < ( myScrollPosX + scrollBarWidth)) {
             movingXStartPos = mx;
+			currentScrollPosX=myScrollPosX;
             console.log("Setting movingX to true");
             movingX = true;
             movingY = false;
@@ -136,13 +141,30 @@ function registerEventListeners() {
         } else
         if (movingX == true)
         {
-            //console.log("movingX");
+            //console.log("movingX");movingXStartPos//get mouse position on grid touched
             var mouse = getMousePos(ansicanvas, e);
             var mx = mouse.x;
-            var my = mouse.y;
-            scrollPosX = mx;
-            redrawScreenMouseUpdate(); // events.js
-
+            var my = mouse.y;		
+			m_diff = Math.abs(mx-movingXStartPos);
+			if(mx > movingXStartPos)		
+            myScrollPosX=currentScrollPosX+m_diff;		
+			else
+			 myScrollPosX=currentScrollPosX-m_diff;			
+			scrollPosX=myScrollPosX*(window_innerWidth/scrollBarWidth);
+			//console.log("window_innerWidth:"+window_innerWidth+ "scrollBarWidth" +(scrollBarWidth+myScrollPosX))
+			if(scrollBarWidth + myScrollPosX <= window_innerWidth)
+			{
+			if (scrollPosX<0) {
+                scrollPosX=0;
+                } 
+				 redrawScreenMouseUpdate(); // events.js
+			}
+			else
+			{
+			console.log("secondelse")
+						scrollPosX = (window_innerWidth-(2 * canvasCharacterWidth));
+                        redrawScreenMouseUpdate(); // events.js
+			}
         }
 
     });

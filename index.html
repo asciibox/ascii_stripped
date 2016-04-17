@@ -36,7 +36,7 @@
                 var visibleHeight = 45; // Number of characters visible on the screen
                 var renderedMaxX; // will contain the real x size
                 var renderedMaxY; // will contain the real y size
-		var totalVisibleWidth = 80;
+		var totalVisibleWidth = 160;
                 var totalVisibleHeight=45;
 		var defaultTotalVisibleWidth = 0; // This should be used to calculate canvasCharacterWidth accordingly
                 var defaultTotalVisibleHeight=0; // This should calculate canvasCharacterHeight accordingly
@@ -132,7 +132,7 @@
   
    window.onload = function () {
 
-	    setTimeout(function() { document.getElementById('ansi2').style.display='none'; }, 2000);
+	   setTimeout(function() { document.getElementById('ansi2').style.display='none'; }, 2000);
    		// THIS IS NEW
    		if (canvases==2) {
 	        var newCanvas = document.createElement("canvas");
@@ -141,7 +141,6 @@
     	    newCanvas.setAttribute("id", "ansi2");
 	        document.getElementById('canvas_holder').appendChild(newCanvas);
 	        ctx2 = document.getElementById('ansi2').getContext("2d");;
-	        ctx = document.getElementById("ansi").getContext("2d");
         }
    		
 		if ( ( defaultTotalVisibleWidth==0) || ( defaultTotalVisibleHeight ==0) ) {
@@ -153,7 +152,7 @@
         codepage = new Codepage("assets/CO_437_8x16vga.png", function() { // codepagedisplay.js
             
 			globalString=""; // This variable gets regularly checked in requestanimframe.js
-			makeCanvasBlack(document.getElementById("ansi"));
+			makeCanvasBlack();
             //setANSICanvasSize(); // app.js
               
             globalContext = document.getElementById("ansi").getContext("2d");
@@ -204,7 +203,7 @@
 					console.log("visibleHeight:"+visibleHeight+" visibleWidth: "+visibleWidth+" totalVisibleHeight: "+totalVisibleHeight+" totalVisibleWidth: "+totalVisibleWidth+" defaultTotalVisibleWidth: "+defaultTotalVisibleWidth+" defaultTotalVisibleHeight: "+defaultTotalVisibleHeight);
 					activateRequestAnimFrame=false;
 					drawCharacters=new Array();
-					makeCanvasBlack(document.getElementById("ansi"));
+					makeCanvasBlack();
 					resize_canvas();
 				}
 	}
